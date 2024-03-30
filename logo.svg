@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="arasaka" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1178.59 1360.92">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+        stroke-width: 0px;
+      }
+
+      .cls-2 {
+        fill: none;
+        stroke: #fff;
+        stroke-miterlimit: 10;
+        stroke-width: 115px;
+      }
+    </style>
+  </defs>
+  <polygon class="cls-2" points="1121.09 987.49 589.3 1294.53 57.5 987.49 57.5 373.43 589.3 66.4 1121.09 373.43 1121.09 987.49"/>
+  <rect class="cls-1" x="536.83" y="662.56" width="104.94" height="617.07"/>
+  <circle class="cls-1" cx="589.3" cy="680.46" r="92.44"/>
+  <rect class="cls-1" x="319.13" y="854.98" width="104.94" height="330.86"/>
+  <rect class="cls-1" x="751.22" y="854.98" width="104.94" height="330.86"/>
+  <circle class="cls-1" cx="371.6" cy="852.13" r="92.44"/>
+  <circle class="cls-1" cx="803.69" cy="854.98" r="92.44"/>
+</svg>

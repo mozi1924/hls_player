@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="dark.css" id="dark-stylesheet" media="(prefers-color-scheme: dark)">
+<link rel="stylesheet" href="light.css" id="light-stylesheet" media="(prefers-color-scheme: light)">
+</head>
+<body>
+    <iframe src="navbar.html" frameborder="0" style="position: fixed; top: 0; left: 0; width: 100%; height: 80px; z-index: 9999;"></iframe>
+    <div class="content">
+    <script src="hls.min.js"></script>
+    <script>
+        // 解析URL查询字符串
+        const parseQueryString = (url) => {
+            const queryString = (url || window.location.search).split("?")[1];
+            if (!queryString) return {};
+    
+            const paramsArray = queryString.split("&");
+            const result = {};
+    
+            for (let i = 0; i < paramsArray.length; i++) {
+                const param = paramsArray[i].split("=");
+                const key = decodeURIComponent(param[0]);
+                const value = decodeURIComponent(param[1] || "");
+    
+                if (key) {
+                    result[key] = value;
+                }
+            }
+    
+            return result;
+        };
+    
+        // 创建并管理视频播放
+        const create = (video) => {
+            let qs = parseQueryString();
+            let streamID = qs["room"]; // 获取streamID
+            let videoSource = `https://stream.arasaka.ltd:8888/${streamID}/index.m3u8`; // 构造新的视频源URL
+    
+            // 使用Hls.js或原生HLS播放视频
+            if (Hls.isSupported()) {
+                const hls = new Hls({ maxLiveSyncPlaybackRate: 1.5 });
+    
+                hls.on(Hls.Events.ERROR, (evt, data) => {
+                    if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+                        hls.recoverMediaError();
+                    } else if (data.fatal) {
+                        hls.destroy();
+                        setTimeout(() => create(video), 2000);
+                    }
+                });
+    
+                hls.on(Hls.Events.MEDIA_ATTACHED, () => {
+                    hls.loadSource(videoSource); // 加载新的视频源
+                });
+    
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    video.play();
+                });
+    
+                hls.attachMedia(video);
+    
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                fetch(videoSource)
+                    .then(() => {
+                        video.src = videoSource;
+                        video.play();
+                    });
+            }
+        };
+    
+        // 将字符串转换为布尔值
+        const parseBoolString = (str, defaultVal) => {
+            const trueValues = ["1", "yes", "true"];
+            const falseValues = ["0", "no", "false"];
+            str = (str || "").toString();
+    
+            if (trueValues.includes(str.toLowerCase())) {
+                return true;
+            } else if (falseValues.includes(str.toLowerCase())) {
+                return false;
+            } else {
+                return defaultVal;
+            }
+        };
+    
+        // 设置视频属性
+        const setVideoAttributes = (video) => {
+            let qs = parseQueryString();
+    
+            video.controls = parseBoolString(qs["controls"], true);
+            video.muted = parseBoolString(qs["muted"], true);
+            video.autoplay = parseBoolString(qs["autoplay"], true);
+            video.playsInline = parseBoolString(qs["playsinline"], true);
+        };
+    
+        // 初始化视频元素
+        const initVideoElement = (callback, container) => {
+            return () => {
+                const video = document.createElement("video");
+                video.id = "video";
+    
+                setVideoAttributes(video);
+                container.append(video);
+                callback(video);
+            };
+        };
+    
+        // 在DOM加载完成后初始化视频播放器
+        window.addEventListener('DOMContentLoaded', initVideoElement(create, document.body));
+    </script>    
+
+</div>
+</body>
+</html>

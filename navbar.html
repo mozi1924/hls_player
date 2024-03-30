@@ -1,0 +1,39 @@
+<!-- navbar.html -->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="navbar-styles.css">
+<link rel="stylesheet" href="navbar-dark.css" id="dark-stylesheet" media="(prefers-color-scheme: dark)">
+<link rel="stylesheet" href="navbar-light.css" id="light-stylesheet" media="(prefers-color-scheme: light)">
+<script>
+  function updateLogo() {
+    var logoImage = document.getElementById('logo-image');
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      // 深色模式
+      logoImage.src = 'logo-dark.svg';
+    } else {
+      // 亮色模式
+      logoImage.src = 'logo-light.svg';
+    }
+  }
+
+  // 页面加载时调用
+  window.onload = updateLogo;
+
+  // 监听系统主题更改
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateLogo);
+</script>
+</head>
+<body>
+  <div class="navbar">
+    <div class="logo">
+      <img id="logo-image" src="logo-light.svg" alt="Logo"> <!-- 添加了id属性 -->
+    </div>
+    <nav>
+    </nav>
+  </div>
+</body>
+</html>
+<!-- designed by mozi1924 https://github.com/mozi1924/ -->
